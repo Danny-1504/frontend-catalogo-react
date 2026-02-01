@@ -3,11 +3,12 @@ import {
   CardContent,
   CardMedia,
   Typography,
-  Button
+  Button,
+  Stack
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
-const LibroCard = ({ libro }) => {
+const LibroCard = ({ libro, onEliminar }) => {
   const navigate = useNavigate();
 
   return (
@@ -48,13 +49,31 @@ const LibroCard = ({ libro }) => {
           {libro.autor_nombre}
         </Typography>
 
-        <Button
-          size="small"
-          sx={{ mt: 1 }}
-          onClick={() => navigate(`/libros/${libro.id}`)}
-        >
-          Ver detalles
-        </Button>
+        <Stack direction="column" spacing={1} sx={{ mt: 1 }}>
+          <Button
+            size="small"
+            variant="outlined"
+            onClick={() => navigate(`/libros/${libro.id}`)}
+          >
+            Ver
+          </Button>
+
+          <Button
+            size="small"
+            variant="contained"
+            onClick={() => navigate(`/libros/editar/${libro.id}`)}
+          >
+            Editar
+          </Button>
+
+          <Button
+            size="small"
+            color="error"
+            onClick={() => onEliminar(libro.id)}
+          >
+            Eliminar
+          </Button>
+        </Stack>
       </CardContent>
     </Card>
   );

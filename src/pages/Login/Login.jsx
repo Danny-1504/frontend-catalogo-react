@@ -33,6 +33,7 @@ export default function Login() {
                 if (response.status === 200) {
                     // Guardamos info básica para personalizar la experiencia del usuario
                     localStorage.setItem("username", loginData.username);
+                    localStorage.setItem("access_token", response.data.access_token);
                     // Redirección forzada al Home para refrescar el estado global
                     window.location.href = "/";
                 }

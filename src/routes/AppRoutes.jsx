@@ -13,6 +13,8 @@ import AutorEditar from "../pages/Autores/AutorEditar";
 import AutorCrear from "../pages/Autores/AutorCrear";
 
 import ListaLibros from "../pages/Libros/ListaLibros";
+import FormLibro from "../pages/Libros/FormLibro";
+import VerLibro from "../pages/Libros/VerLibro";
 
 import ListaReservas from "../pages/Reservas/ListaReservas";
 import CrearReserva from "../pages/Reservas/ReservaCrear";
@@ -42,6 +44,9 @@ export default function AppRoutes() {
 
 
           <Route path="/" element={<ListaLibros />} />
+          <Route path="/libros/nuevo" element={<FormLibro />} />
+          <Route path="/libros/editar/:id" element={<FormLibro />} />
+          <Route path="/libros/:id" element={<VerLibro />} />
 
 
           <Route path="/reservas" element={<ListaReservas />} />

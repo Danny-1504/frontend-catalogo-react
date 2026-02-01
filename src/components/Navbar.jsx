@@ -113,7 +113,7 @@ export default function Navbar() {
                   <>
                     <Button
                       sx={{ ...navBtn, color: "#90caf9" }}
-                      onClick={() => handleNavigate("/libros/crear")}
+                      onClick={() => handleNavigate("/libros/nuevo")}
                     >
                       + Libro
                     </Button>
