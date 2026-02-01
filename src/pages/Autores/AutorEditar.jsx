@@ -1,12 +1,15 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Box, Container, TextField, Button, Typography, Stack, Paper } from "@mui/material";
+// Servicios para obtener y actualizar datos del autor
 import { obtenerAutoresPorId, actualizarAutor } from "../../Services/autores_service";
 
 export default function AutorEditar() {
+    // Obtener el ID del autor desde los parámetros de la URL
     const { id } = useParams();
     const navigate = useNavigate();
 
+    // Estado del formulario con los datos del autor
     const [autor, setAutor] = useState({
         nombres: "",
         apellidos: "",
@@ -16,27 +19,29 @@ export default function AutorEditar() {
         imagen_url: "",
     });
 
-    // 🔐 protección básica
+    // Verificar si el usuario está autenticado
     useEffect(() => {
         if (!localStorage.getItem("username")) {
-            navigate("/login");
+            navigate("/login"); // Redirigir al login si no hay usuario
         }
     }, [navigate]);
 
-    // 1️⃣ Cargar datos actuales
+    // Cargar los datos actuales del autor
     useEffect(() => {
         const cargarDatos = async () => {
             try {
+                // Obtener los datos del autor desde la API
                 const res = await obtenerAutoresPorId(id);
-                console.log("AUTOR:", res);
-                setAutor(res); // ✅ AQUÍ
+                console.log("AUTOR:", res); // Para depuración
+                setAutor(res); // Actualizar el estado con los datos obtenidos
             } catch (error) {
                 console.error("Error al cargar autor", error);
             }
         };
         cargarDatos();
-    }, [id]);
+    }, [id]); // Se ejecuta cuando cambia el ID del autor
 
+    // Manejar cambios en los campos del formulario
     const handleChange = (e) => {
         setAutor({
             ...autor,
@@ -44,12 +49,14 @@ export default function AutorEditar() {
         });
     };
 
-    // 2️⃣ Guardar cambios
+    // Enviar el formulario para actualizar el autor
     const handleSubmit = async (e) => {
-        e.preventDefault();
+        e.preventDefault(); // Prevenir recarga de página
         try {
+            // Llamar al servicio para actualizar el autor
             await actualizarAutor(id, autor);
             alert("¡Autor actualizado con éxito!");
+            // Redirigir a la página de detalle del autor
             navigate(`/autores/${id}`);
         } catch (error) {
             console.error(error);
@@ -69,8 +76,10 @@ export default function AutorEditar() {
                         Editar Autor
                     </Typography>
 
+                    {/* Formulario de edición */}
                     <form onSubmit={handleSubmit}>
                         <Stack spacing={2}>
+                            {/* Campo: Nombres del autor */}
                             <TextField
                                 fullWidth
                                 label="Nombres"
@@ -80,6 +89,7 @@ export default function AutorEditar() {
                                 variant="filled"
                             />
 
+                            {/* Campo: Apellidos del autor */}
                             <TextField
                                 fullWidth
                                 label="Apellidos"
@@ -89,6 +99,7 @@ export default function AutorEditar() {
                                 variant="filled"
                             />
 
+                            {/* Campo: Nacionalidad */}
                             <TextField
                                 fullWidth
                                 label="Nacionalidad"
@@ -98,6 +109,7 @@ export default function AutorEditar() {
                                 variant="filled"
                             />
 
+                            {/* Campo: Fecha de nacimiento (tipo date) */}
                             <TextField
                                 fullWidth
                                 label="Fecha de nacimiento"
@@ -109,6 +121,7 @@ export default function AutorEditar() {
                                 variant="filled"
                             />
 
+                            {/* Campo: Biografía (área de texto amplia) */}
                             <TextField
                                 fullWidth
                                 label="Biografía"
@@ -120,8 +133,9 @@ export default function AutorEditar() {
                                 variant="filled"
                             />
 
-                            {/* Imagen */}
+                            {/* Sección para la imagen del autor */}
                             <Stack spacing={1} sx={{ my: 2 }}>
+                                {/* Mostrar imagen actual si existe */}
                                 {autor.imagen_url && (
                                     <Box sx={{ textAlign: "center" }}>
                                         <img
@@ -138,6 +152,7 @@ export default function AutorEditar() {
                                     </Box>
                                 )}
 
+                                {/* Campo para actualizar la URL de la imagen */}
                                 <TextField
                                     fullWidth
                                     size="small"
@@ -149,6 +164,7 @@ export default function AutorEditar() {
                                 />
                             </Stack>
 
+                            {/* Botón para guardar los cambios */}
                             <Button
                                 fullWidth
                                 variant="contained"
@@ -158,10 +174,11 @@ export default function AutorEditar() {
                                 Guardar Cambios
                             </Button>
 
+                            {/* Botón para cancelar y volver atrás */}
                             <Button
                                 fullWidth
                                 variant="outlined"
-                                onClick={() => navigate(-1)}
+                                onClick={() => navigate(-1)} // Regresa a la página anterior
                             >
                                 Cancelar
                             </Button>

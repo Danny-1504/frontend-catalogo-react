@@ -9,11 +9,13 @@ import {
   Stack,
   Paper,
 } from "@mui/material";
+// Servicio para crear un nuevo autor
 import { crearAutor } from "../../Services/autores_service";
 
 export default function AutorCrear() {
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // Para redirigir después de crear
 
+  // Estado del formulario con valores iniciales vacíos
   const [autor, setAutor] = useState({
     nombres: "",
     apellidos: "",
@@ -23,13 +25,14 @@ export default function AutorCrear() {
     imagen_url: "",
   });
 
-  // 🔐 Protección básica (igual que editar)
+  // Verificar si el usuario está autenticado
   useEffect(() => {
     if (!localStorage.getItem("username")) {
-      navigate("/login");
+      navigate("/login"); // Redirigir al login si no hay usuario
     }
   }, [navigate]);
 
+  // Manejar cambios en los campos del formulario
   const handleChange = (e) => {
     setAutor({
       ...autor,
@@ -37,15 +40,17 @@ export default function AutorCrear() {
     });
   };
 
+  // Enviar el formulario para crear el autor
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault(); // Prevenir recarga de página
 
     try {
+      // Crear el autor, convirtiendo fecha vacía a null si es necesario
       await crearAutor({
         ...autor,
         fecha_nacimiento: autor.fecha_nacimiento || null,
       });
-      navigate("/autores");
+      navigate("/autores"); // Redirigir a la lista de autores
     } catch (error) {
       console.error("Error al crear autor", error);
       alert("Error al crear el autor");
@@ -60,8 +65,10 @@ export default function AutorCrear() {
             Crear Autor
           </Typography>
 
+          {/* Formulario de creación */}
           <form onSubmit={handleSubmit}>
             <Stack spacing={2}>
+              {/* Campo: Nombres del autor */}
               <TextField
                 fullWidth
                 label="Nombres"
@@ -72,6 +79,7 @@ export default function AutorCrear() {
                 required
               />
 
+              {/* Campo: Apellidos del autor */}
               <TextField
                 fullWidth
                 label="Apellidos"
@@ -82,6 +90,7 @@ export default function AutorCrear() {
                 required
               />
 
+              {/* Campo: Nacionalidad (opcional) */}
               <TextField
                 fullWidth
                 label="Nacionalidad"
@@ -91,6 +100,7 @@ export default function AutorCrear() {
                 variant="filled"
               />
 
+              {/* Campo: Fecha de nacimiento (opcional, tipo date) */}
               <TextField
                 fullWidth
                 label="Fecha de nacimiento"
@@ -102,6 +112,7 @@ export default function AutorCrear() {
                 variant="filled"
               />
 
+              {/* Campo: Biografía (opcional, área de texto amplia) */}
               <TextField
                 fullWidth
                 label="Biografía"
@@ -113,8 +124,9 @@ export default function AutorCrear() {
                 variant="filled"
               />
 
-              {/* Imagen */}
+              {/* Sección para la imagen del autor */}
               <Stack spacing={1} sx={{ my: 2 }}>
+                {/* Mostrar previsualización de la imagen si hay URL */}
                 {autor.imagen_url && (
                   <Box sx={{ textAlign: "center" }}>
                     <img
@@ -131,6 +143,7 @@ export default function AutorCrear() {
                   </Box>
                 )}
 
+                {/* Campo para la URL de la imagen */}
                 <TextField
                   fullWidth
                   size="small"
@@ -142,6 +155,7 @@ export default function AutorCrear() {
                 />
               </Stack>
 
+              {/* Botón para guardar el nuevo autor */}
               <Button
                 fullWidth
                 variant="contained"
@@ -151,10 +165,11 @@ export default function AutorCrear() {
                 Guardar
               </Button>
 
+              {/* Botón para cancelar y volver atrás */}
               <Button
                 fullWidth
                 variant="outlined"
-                onClick={() => navigate(-1)}
+                onClick={() => navigate(-1)} // Regresa a la página anterior
               >
                 Cancelar
               </Button>

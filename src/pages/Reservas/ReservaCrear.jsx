@@ -11,41 +11,45 @@ import {
   MenuItem,
 } from "@mui/material";
 
+// Servicios para obtener datos y crear reserva
 import { obtenerLibros } from "../../Services/libros_service";
 import { crearReserva } from "../../Services/reservas_service";
 
 export default function ReservaCrear() {
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // Para redirigir después de crear
 
+  // Estado para almacenar la lista de libros disponibles
   const [libros, setLibros] = useState([]);
 
+  // Estado del formulario para nueva reserva
   const [reserva, setReserva] = useState({
-    libro: "",
-    usuario: "",
-    fecha_reserva: "",
-    fecha_devolucion: "",
+    libro: "",          // ID del libro seleccionado
+    usuario: "",        // Nombre del usuario
+    fecha_reserva: "",  // Fecha de reserva
+    fecha_devolucion: "", // Fecha de devolución
   });
 
-  // 🔐 Protección
+  // Verificar si el usuario está autenticado
   useEffect(() => {
     if (!localStorage.getItem("username")) {
-      navigate("/login");
+      navigate("/login"); // Redirigir al login si no hay usuario
     }
   }, [navigate]);
 
-  // 📚 Cargar libros
+  // Cargar lista de libros disponibles
   useEffect(() => {
     const cargarLibros = async () => {
       try {
-        const res = await obtenerLibros();
+        const res = await obtenerLibros(); // Obtener todos los libros
         setLibros(res);
       } catch (error) {
         console.error("Error al cargar libros", error);
       }
     };
     cargarLibros();
-  }, []);
+  }, []); // Solo se ejecuta al montar el componente
 
+  // Manejar cambios en los campos del formulario
   const handleChange = (e) => {
     setReserva({
       ...reserva,
@@ -53,13 +57,14 @@ export default function ReservaCrear() {
     });
   };
 
+  // Enviar formulario para crear nueva reserva
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault(); // Prevenir recarga de página
 
     try {
-      await crearReserva(reserva);
+      await crearReserva(reserva); // Llamar al servicio para crear reserva
       alert("Reserva creada con éxito");
-      navigate("/reservas");
+      navigate("/reservas"); // Redirigir a la lista de reservas
     } catch (error) {
       console.error(error);
       alert("Error al crear la reserva");
@@ -76,7 +81,7 @@ export default function ReservaCrear() {
 
           <form onSubmit={handleSubmit}>
             <Stack spacing={2}>
-              {/* Libro */}
+              {/* Selector de libro */}
               <TextField
                 select
                 fullWidth
@@ -87,6 +92,7 @@ export default function ReservaCrear() {
                 variant="filled"
                 required
               >
+                {/* Mapear lista de libros para opciones */}
                 {libros.map((libro) => (
                   <MenuItem key={libro.id} value={libro.id}>
                     {libro.titulo}
@@ -94,7 +100,7 @@ export default function ReservaCrear() {
                 ))}
               </TextField>
 
-              {/* Usuario */}
+              {/* Campo para nombre de usuario */}
               <TextField
                 fullWidth
                 label="Usuario"
@@ -105,7 +111,7 @@ export default function ReservaCrear() {
                 required
               />
 
-              {/* Fecha reserva */}
+              {/* Campo para fecha de reserva */}
               <TextField
                 fullWidth
                 label="Fecha de reserva"
@@ -113,12 +119,12 @@ export default function ReservaCrear() {
                 type="date"
                 value={reserva.fecha_reserva}
                 onChange={handleChange}
-                InputLabelProps={{ shrink: true }}
+                InputLabelProps={{ shrink: true }} // Para que la etiqueta no se superponga
                 variant="filled"
                 required
               />
 
-              {/* Fecha devolución */}
+              {/* Campo para fecha de devolución */}
               <TextField
                 fullWidth
                 label="Fecha de devolución"
@@ -131,6 +137,7 @@ export default function ReservaCrear() {
                 required
               />
 
+              {/* Botón para guardar la reserva */}
               <Button
                 fullWidth
                 variant="contained"
@@ -140,10 +147,11 @@ export default function ReservaCrear() {
                 Guardar Reserva
               </Button>
 
+              {/* Botón para cancelar y volver atrás */}
               <Button
                 fullWidth
                 variant="outlined"
-                onClick={() => navigate(-1)}
+                onClick={() => navigate(-1)} // Regresa a la página anterior
               >
                 Cancelar
               </Button>
